@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import Ithome
+
 url = 'https://dyn.ithome.com/ithome/getajaxdata.aspx'  # IT之家评论信息请求地址
 headers = {
     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
@@ -95,25 +95,14 @@ def getpage_commentinfo(news_id):  # 输入文章url，输出用户列表
             break
     return all_comment
 
-def add(data_list):
-    for data in data_list:
-        ithome = Ithome.Ithome(None,
-                               data['user_id'],data['user_level'],data['user_name'],data['user_comment'],data['user_comment_praise'],
-                               data['user_comment_oppose'],data['user_dev'],data['user_floor'],data['user_address'],data['user_time'],data['user_app'],data['user_news_id'])
-        _code = Ithome.db.session.add(ithome)
-    Ithome.db.session.commit()
-    print("新闻id：%s 导入完毕 总共 %s 条" %(data_list[0]['user_news_id'],len(data_list)))
-
 if __name__ == '__main__':
     i = 461407
     while True:
         try:
             newid = i
             data_list = getpage_commentinfo(newid)
-            # print(data_list)
-            add(data_list)
+            print(data_list)
         except Exception as e:
             print(e)
         finally:
             i = i -1
-
